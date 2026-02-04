@@ -1,24 +1,24 @@
 version: "3.8"
 
 services:
-  openclaw-gateway:
-    # Use the official image instead of "local"
-    image: openclaw/openclaw:latest
+  openclaw:
+    build: .
     restart: always
+    # Este comando ejecuta el programa una vez compilado
+    command: ["node", "dist/index.js", "gateway", "--port", "18789", "--bind", "0.0.0.0"]
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
       - CLAWDBOT_GATEWAY_TOKEN=${CLAWDBOT_GATEWAY_TOKEN}
-      # Use openai/gpt-4o or your preferred model
-      - OPENCLAW_DEFAULT_MODEL=${OPENCLAW_DEFAULT_MODEL:-openai/gpt-4o}
-      - TZ=UTC
+      - OPENCLAW_DEFAULT_MODEL=openai/gpt-4o
+      - HOST=0.0.0.0
     networks:
       - dokploy-network
     volumes:
       - openclaw_data:/home/node/.openclaw
-      - openclaw_workspace:/home/node/openclaw/workspace
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=dokploy-network"
       - "traefik.http.routers.openclaw.rule=Host(`claw.undergroundstudio.io`)"
       - "traefik.http.routers.openclaw.entrypoints=websecure"
       - "traefik.http.routers.openclaw.tls.certresolver=letsencrypt"
@@ -30,4 +30,3 @@ networks:
 
 volumes:
   openclaw_data:
-  openclaw_workspace:
