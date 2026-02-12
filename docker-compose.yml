@@ -1,16 +1,14 @@
 services:
   openclaw:
     build: .
-    container_name: openclaw_prod
+    container_name: openclaw_app
     environment:
-      - OPENCLAW_GATEWAY_TOKEN=mi_password_segura  # Cámbiala por la tuya
-      - OPENCLAW_GATEWAY_BIND=lan
       - HOME=/home/node
+      - OPENCLAW_GATEWAY_TOKEN=tu_contraseña_aqui  # DEFINE TU PASSWORD AQUÍ
     volumes:
       - ./openclaw_data:/home/node/.openclaw
       - ./proyectos:/home/node/.openclaw/workspace
     ports:
       - "18789:18789"
-      - "18790:18790"
     init: true
     restart: unless-stopped
